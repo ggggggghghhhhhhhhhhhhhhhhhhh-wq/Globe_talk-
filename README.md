@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Globe Talk - Cloud Flow Master Hub</title>
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            background: #030712;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-bottom: 100px;
+        }
+
+        /* 1. CINEMATIC COSMIC SPLASH SCREEN (3 सेकंड जादुई अनुभव) */
+        #splashScreen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #0f172a 0%, #030712 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s ease;
+        }
+        .universe-orbit {
+            width: 170px;
+            height: 170px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: spinUniverse 12s linear infinite;
+            margin-bottom: 25px;
+        }
+        .center-logo-emerge {
+            width: 75px;
+            height: 75px;
+            background: linear-gradient(135deg, #0ea5e9, #a855f7, #ec4899);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 26px;
+            color: #ffffff;
+            box-shadow: 0 0 50px rgba(14, 165, 233, 0.8), 0 0 100px rgba(168, 85, 247, 0.6);
+            animation: emergeLogo 2s cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite alternate;
+            z-index: 2;
+        }
+        .orbiting-moon {
+            position: absolute;
+            font-size: 30px;
+            top: -15px;
+            animation: floatMoon 2s ease-in-out infinite alternate;
+        }
+        .orbiting-star {
+            position: absolute;
+            font-size: 26px;
+            bottom: -5px;
+            right: -2px;
+            animation: pulseStar 1.5s ease-in-out infinite alternate;
+        }
+        @keyframes spinUniverse {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        @keyframes emergeLogo {
+            0% { transform: scale(0.6); opacity: 0.6; }
+            100% { transform: scale(1.15); opacity: 1; box-shadow: 0 0 60px rgba(14,165,233,1), 0 0 120px rgba(168,85,247,0.8); }
+        }
+        @keyframes floatMoon {
+            0% { transform: translateY(0px) scale(0.9); }
+            100% { transform: translateY(-12px) scale(1.2); }
+        }
+        @keyframes pulseStar {
+            0% { transform: scale(0.8); opacity: 0.6; }
+            100% { transform: scale(1.35); opacity: 1; text-shadow: 0 0 25px #38bdf8; }
+        }
+        .splash-title {
+            font-size: 34px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #38bdf8, #c084fc, #ec4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 6px;
+            letter-spacing: 1.5px;
+        }
+        .splash-subtitle {
+            font-size: 11px;
+            color: #94a3b8;
+            letter-spacing: 3px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            padding: 6px 18px;
+            border-radius: 20px;
+            background: rgba(15, 23, 42, 0.9);
+        }
+
+        /* MAIN APP LAYOUT CONTAINER */
+        .app-container {
+            width: 100%;
+            max-width: 480px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* TOP PROFESSIONAL NAVBAR */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            max-width: 480px;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(14px);
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid rgba(168, 85, 247, 0.25);
+            z-index: 1000;
+        }
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo-circle {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #0ea5e9, #a855f7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 15px;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.7);
+        }
+        .app-title-nav {
+            font-size: 18px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #38bdf8, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* SEARCH BAR */
+        .search-container {
+            position: fixed;
+            top: 62px;
+            width: 100%;
+            max-width: 480px;
+            background: rgba(15, 23, 42, 0.95);
+            padding: 10px 16px;
+            display: flex;
+            gap: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            z-index: 999;
+        }
+        .search-box {
+            flex: 1;
+            display: flex;
+            background: #1e293b;
+            border-radius: 24px;
+            border: 1px solid rgba(168, 85, 247, 0.35);
+            overflow: hidden;
+            padding: 2px 14px;
+            align-items: center;
+        }
+        .search-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 8px;
+            color: white;
+            font-size: 13px;
+            outline: none;
+        }
+
+        /* CATEGORIES BAR (6 Tabs) */
+        .categories-bar {
+            position: fixed;
+            top: 118px;
+            width: 100%;
+            max-width: 480px;
+            background: rgba(15, 23, 42, 0.95);
+            padding: 8px 12px;
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            border-bottom: 1px solid rgba(168, 85, 247, 0.2);
+            z-index: 998;
+            scrollbar-width: none;
+        }
+        .categories-bar::-webkit-scrollbar { display: none; }
+        .cat-chip {
+            background: #1e293b;
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            color: #38bdf8;
+            padding: 6px 14px;
+            border-radius: 18px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .cat-chip.active {
+            background: linear-gradient(135deg, rgba(14, 165, 233, 0.5), rgba(168, 85, 247, 0.5));
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+            color: #ffffff;
+            border-color: #a855f7;
+        }
+
+        /* VIDEO FEED CONTAINER */
+        .feed-container {
+            margin-top: 175px;
+            width: 100%;
+            max-width: 480px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .video-card {
+            background: #0f172a;
+            border-radius: 18px;
+            overflow: hidden;
+            border: 1px solid rgba(168, 85, 247, 0.35);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.85);
+        }
+        .video-frame {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background: #000;
+        }
+        .video-frame iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        .video-details {
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .video-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: #f8fafc;
+        }
+        .channel-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .channel-name-tag {
+            font-size: 12px;
+            color: #38bdf8;
+            font-weight: bold;
+        }
+        
+        /* NO-POPUP REAL INTERACTIVE BUTTONS */
+        .action-buttons-group {
+            display: flex;
+            gap: 8px;
+        }
+        .interactive-btn {
+            background: #1e293b;
+            color: #38bdf8;
+            border: 1px solid rgba(168, 85, 247, 0.4);
+            padding: 5px 12px;
+            border-radius: 14px;
+            font-size: 11px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .interactive-btn.active-state {
+            background: linear-gradient(135deg, #0ea5e9, #a855f7);
+            color: white;
+            border-color: #a855f7;
+        }
+        .video-chips-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .mini-chip {
+            background: rgba(168, 85, 247, 0.18);
+            color: #c084fc;
+            font-size: 10px;
+            padding: 3px 10px;
+            border-radius: 12px;
+            border: 1px solid rgba(168, 85, 247, 0.35);
+        }
+        .loading-more {
+            text-align: center;
+            padding: 15px;
+            color: #38bdf8;
+            font-size: 13px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 1. CINEMATIC COSMIC SPLASH SCREEN (3 सेकंड जादुई अनुभव) -->
+    <div id="splashScreen">
+        <div class="universe-orbit">
+            <div class="center-logo-emerge">GT</div>
+            <div class="orbiting-moon">🌙</div>
+            <div class="orbiting-star">⭐</div>
+        </div>
+        <div class="splash-title">Globe Talk</div>
+        <div class="splash-subtitle">CLOUD FLOW MASTER HUB</div>
+    </div>
+
+    <!-- MAIN APP CONTAINER -->
+    <div class="app-container">
+        <!-- Top Navbar -->
+        <div class="navbar">
+            <div class="nav-left">
+                <div class="logo-circle">GT</div>
+                <div class="app-title-nav">Globe Talk Pro</div>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-container">
+            <div class="search-box">
+                <input type="text" class="search-input" id="searchInput" placeholder="500 वीडियो डेटाबेस में खोजें..." onkeyup="filterVideos()">
+            </div>
+        </div>
+    </div>
+
+    <!-- CATEGORIES BAR (6 Tabs) -->
+    <div class="categories-bar" style="max-width: 480px;">
+        <div class="cat-chip active" onclick="filterCategory('all', this)">🔥 All Traffic (500)</div>
+        <div class="cat-chip" onclick="filterCategory('shayari', this)">📜 Shayari</div>
+        <div class="cat-chip" onclick="filterCategory('gaming', this)">🎮 Gaming</div>
+        <div class="cat-chip" onclick="filterCategory('music', this)">🎵 Music</div>
+        <div class="cat-chip" onclick="filterCategory('animation', this)">🎬 Animation</div>
+        <div class="cat-chip" onclick="filterCategory('tech', this)">💻 Tech</div>
+    </div>
+
+    <!-- FEED CONTAINER -->
+    <div class="feed-container" id="videoFeed">
+        <!-- वीडियोज़ यहाँ लेजी-लोडिंग के साथ आएंगे ताकि ऐप कभी क्रैश न हो -->
+    </div>
+    <div class="loading-more" id="loadingText">और वीडियो लोड हो रहे हैं...</div>
+
+    <!-- Firebase SDK & Master Cloud Flow Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // Google Firebase & Cloud Storage Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAmCn_Cvmo1BNRglZadm1LjOwudEfrGSYk",
+            projectId: "globe-talk-98775",
+            storageBucket: "globe-talk-98775.firebasestorage.app",
+            databaseURL: "https://globe-talk-98775-default-rtdb.firebaseio.com"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // 500 वीडियोज़ की मास्टर लिस्ट तैयार करना
+        let allVideos = [];
+        const sampleVideos = [
+            { id: "3JZ_D3ELwOQ", title: "दिल को छू लेने वाली रोमांटिक शायरी और पोएट्री स्पेशल", category: "shayari", channel: "Ayaan Ji Official" },
+            { id: "kJQP7kiw5Fk", title: "Free Fire MAX Pro Gameplay & Tournament Highlights", category: "gaming", channel: "Gaming Arena Pro" },
+            { id: "9bZkp7q19f0", title: "K-Pop BTS & Cosmic Music Long Stream Edition", category: "music", channel: "K-Pop Universe" },
+            { id: "dQw4w9WgXcQ", title: "Advanced AI Short Animation & Storytelling Series", category: "animation", channel: "Globe Talk Studios" },
+            { id: "3JZ_D3ELwOQ", title: "Globe Talk Mobile App Cloud Flow & Coding Guide", category: "tech", channel: "Ayaan Ji Tech" }
+        ];
+
+        // ठीक 500 वीडियोज़ का डेटा जनरेट करना
+        for(let i = 1; i <= 100; i++) {
+            sampleVideos.forEach((v, idx) => {
+                allVideos.push({
+                    id: v.id,
+                    title: `${v.title} #${(i * 5) + idx}`,
+                    category: v.category,
+                    channel: v.channel
+                });
+            });
+        }
+
+        let currentIndex = 0;
+        const batchSize = 10; // क्रैश रोकने के लिए एक बार में 10 वीडियो लोड होंगे
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                const splash = document.getElementById('splashScreen');
+                splash.style.opacity = '0';
+                setTimeout(() => splash.style.display = 'none', 800);
+            }, 3000);
+            loadMoreVideos();
+        });
+
+        // लेजी-लोडिंग और क्लाउड फ्लो फंक्शन
+        function loadMoreVideos() {
+            let feed = document.getElementById('videoFeed');
+            let loadingText = document.getElementById('loadingText');
+
+            let endIndex = currentIndex + batchSize;
+            if (endIndex > allVideos.length) endIndex = allVideos.length;
+
+            if (currentIndex >= allVideos.length) {
+                loadingText.innerText = "सभी 500 वीडियो लोड हो चुके हैं!";
+                return;
+            }
+
+            for (let i = currentIndex; i < endIndex; i++) {
+                let video = allVideos[i];
+                let card = document.createElement('div');
+                card.className = 'video-card';
+                card.setAttribute('data-category', video.category);
+                card.setAttribute('data-title', video.title.toLowerCase());
+
+                card.innerHTML = `
+                    <div class="video-frame">
+                        <iframe src="https://www.youtube.com/embed/${video.id}?controls=1&modestbranding=1&rel=0&iv_load_policy=3" loading="lazy" allowfullscreen></iframe>
+                    </div>
+                    <div class="video-details">
+                        <div class="video-title">${video.title}</div>
+                        <div class="channel-row">
+                            <span class="channel-name-tag">📺 ${video.channel}</span>
+                            <div class="action-buttons-group">
+                                <button class="interactive-btn" onclick="toggleLike(this)">❤️ Like</button>
+                                <button class="interactive-btn" onclick="toggleFollow(this)">➕ Follow</button>
+                            </div>
+                        </div>
+                        <div class="video-chips-row">
+                            <span class="mini-chip">☁️ Cloud Flow</span>
+                            <span class="mini-chip">Crash-Free</span>
+                        </div>
+                    </div>
+                `;
+                feed.appendChild(card);
+            }
+
+            currentIndex = endIndex;
+        }
+
+        // स्क्रॉल करने पर ऑटोमैटिक नए वीडियो लोड होना
+        window.addEventListener('scroll', () => {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
+                loadMoreVideos();
+            }
+        });
+    </script>
+
+    <script>
+        // Direct Working Buttons (No Popups)
+        function toggleLike(btn) {
+            btn.classList.toggle('active-state');
+            btn.innerText = btn.classList.contains('active-state') ? "💖 Liked" : "❤️ Like";
+        }
+
+        function toggleFollow(btn) {
+            btn.classList.toggle('active-state');
+            btn.innerText = btn.classList.contains('active-state') ? "✔ Following" : "➕ Follow";
+        }
+
+        // Search Filter
+        function filterVideos() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let cards = document.getElementsByClassName('video-card');
+            for (let i = 0; i < cards.length; i++) {
+                let title = cards[i].getAttribute('data-title');
+                cards[i].style.display = title.includes(input) ? "" : "none";
+            }
+        }
+
+        // Category Filter
+        function filterCategory(cat, element) {
+            let chips = document.getElementsByClassName('cat-chip');
+            for(let c of chips) c.classList.remove('active');
+            element.classList.add('active');
+
+            let cards = document.getElementsByClassName('video-card');
+            for(let card of cards) {
+                let categories = card.getAttribute('data-category');
+                card.style.display = (cat === 'all' || categories.includes(cat)) ? "" : "none";
+            }
+        }
+    </script>
+</body>
+</html>
