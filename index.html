@@ -1,325 +1,4 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Globe Top - Ultimate Master Edition</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { margin: 0; background: #0b141a; color: #e9edef; padding-bottom: 76px; overflow-x: hidden; }
-    .main-screen { display: none; }
-    .main-screen.active { display: block; }
-    
-    .ultra-top { padding: 12px 15px; background: #1f2c34; position: sticky; top: 0; z-index: 45; border-bottom: 1px solid #2a3942; }
-    .top-row { display: flex; justify-content: space-between; align-items: center; }
-    .app-brand { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 900; color: #00a884; }
-    .app-logo-box { width: 36px; height: 36px; border-radius: 10px; background: #00a884; display: flex; align-items: center; justify-content: center; color: #fff; }
-    
-    .sub-tabs { display: flex; gap: 8px; overflow-x: auto; background: #1f2c34; padding: 0 12px 10px 12px; border-bottom: 1px solid #2a3942; white-space: nowrap; }
-    .sub-tab { background: #2a3942; color: #8696a0; border: none; padding: 6px 14px; border-radius: 16px; font-size: 13px; font-weight: 600; cursor: pointer; }
-    .sub-tab.active { background: #00a884; color: #fff; }
-
-    .feed-container { padding: 12px; display: flex; flex-direction: column; gap: 16px; max-width: 600px; margin: 0 auto; }
-    .video-card { background: #1f2c34; border-radius: 14px; overflow: hidden; border: 1px solid #2a3942; }
-    .thumbnail { width: 100%; height: 200px; background: #0b141a; display: flex; align-items: center; justify-content: center; position: relative; font-size: 40px; color: #8696a0; cursor: pointer; }
-    .video-info-row { padding: 12px; display: flex; gap: 12px; align-items: flex-start; }
-    .channel-dp { width: 40px; height: 40px; border-radius: 50%; background: #2a3942; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
-    .video-meta { flex: 1; }
-    .video-title { font-size: 15px; font-weight: bold; margin-bottom: 4px; color: #e9edef; }
-    .channel-name { font-size: 13px; color: #8696a0; }
-    .engage-bar { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px 12px 12px; border-top: 1px solid #2a3942; }
-    .action-btn { background: #2a3942; border: none; color: #e9edef; padding: 6px 12px; border-radius: 16px; font-size: 12px; cursor: pointer; }
-    .action-btn.liked { background: #00a884; color: #fff; }
-    .subscribe-btn { background: #00a884; color: #fff; border: none; padding: 6px 14px; border-radius: 20px; font-size: 12px; font-weight: bold; cursor: pointer; }
-
-    /* VOICE CLUB HUB */
-    .voice-hub-container { padding: 14px; display: flex; flex-direction: column; gap: 14px; max-width: 600px; margin: 0 auto; }
-    .room-box { background: #1f2c34; border: 1px solid #2a3942; border-radius: 16px; padding: 16px; cursor: pointer; }
-    .room-header-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .room-badge { background: rgba(0, 168, 132, 0.15); color: #00a884; font-size: 11px; font-weight: bold; padding: 3px 8px; border-radius: 6px; }
-    .room-title { font-size: 16px; font-weight: bold; color: #e9edef; margin-bottom: 6px; }
-    .room-desc { font-size: 12px; color: #8696a0; margin-bottom: 12px; }
-    .room-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #2a3942; padding-top: 10px; font-size: 12px; color: #8696a0; }
-
-    /* NEW ROOM MODAL */
-    .new-room-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 72px; background: #0b141a; z-index: 100; flex-direction: column; padding: 16px; justify-content: center; align-items: center; }
-    .modal-card { background: #1f2c34; border-radius: 16px; padding: 20px; border: 1px solid #2a3942; max-width: 500px; width: 100%; }
-
-    /* CHAT & DM MODAL */
-    .chat-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 14px; border-bottom: 1px solid #1f2c34; cursor: pointer; background: #0b141a; }
-    .dm-modal { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 72px; background: #0b141a; z-index: 85; flex-direction: column; }
-    .dm-header { background: #1f2c34; padding: 10px 14px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #2a3942; }
-    .dm-body { flex: 1; padding: 14px; overflow-y: auto; background: #0b141a; display: flex; flex-direction: column; gap: 8px; }
-    .msg-bubble { background: #202c33; padding: 8px 12px; border-radius: 8px; max-width: 80%; font-size: 13px; align-self: flex-start; word-break: break-word; }
-    .msg-bubble.mine { background: #005c4b; align-self: flex-end; }
-
-    /* PROFILE & FULL OPTIONS */
-    .prof-top { background: #1f2c34; padding: 24px 15px; text-align: center; border-bottom: 8px solid #0b141a; }
-    .prof-dp { width: 88px; height: 88px; border-radius: 50%; background: #2a3942; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; font-size: 40px; cursor: pointer; border: 2px solid #00a884; }
-    .p-card { background: #1f2c34; border-radius: 12px; padding: 14px; margin: 12px; border: 1px solid #2a3942; }
-    .p-in { width: 100%; padding: 10px; margin: 6px 0 10px; border-radius: 8px; border: 1px solid #2a3942; background: #111b21; color: #fff; font-size: 13px; outline: none; }
-    .vip-save { width: 100%; padding: 12px; background: #00a884; color: #fff; border: none; border-radius: 10px; font-weight: bold; font-size: 14px; cursor: pointer; }
-    .profile-action-row { display: flex; gap: 10px; margin-top: 12px; }
-    .profile-btn { flex: 1; padding: 10px; border-radius: 8px; border: none; font-weight: bold; font-size: 13px; cursor: pointer; }
-    
-    .game-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; padding: 14px; }
-    .game-card { background: #1f2c34; border: 1px solid #2a3942; border-radius: 14px; padding: 16px; text-align: center; cursor: pointer; }
-
-    /* BOTTOM NAV (7 TABS) */
-    .nav-7 { position: fixed; bottom: 0; left: 0; right: 0; background: #1f2c34; border-top: 1px solid #2a3942; display: flex; z-index: 90; padding: 4px 0; }
-    .n-tab { flex: 1; background: none; border: none; color: #8696a0; padding: 6px 1px; font-size: 9px; font-weight: 600; display: flex; flex-direction: column; align-items: center; gap: 2px; cursor: pointer; }
-    .n-tab.active { color: #00a884; font-weight: bold; }
-    .n-tab span { font-size: 17px; }
-  </style>
-
-  <!-- Firebase Realtime SDK -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyAmCn_Cvmo1BNRglZadm1LjOwudEfrGSYk",
-      projectId: "globe-talk-98775",
-      storageBucket: "globe-talk-98775.firebasestorage.app",
-      databaseURL: "https://globe-talk-98775-default-rtdb.firebaseio.com"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getDatabase(app);
-    window.firebaseDb = db;
-    window.firebaseRef = ref;
-    window.firebasePush = push;
-    window.firebaseOnChildAdded = onChildAdded;
-  </script>
-</head>
-<body>
-
-  <!-- 1. HOME SCREEN (YouTube Style Hub) -->
-  <div id="scHome" class="main-screen active">
-    <div class="ultra-top">
-      <div class="top-row">
-        <div class="app-brand">
-          <div class="app-logo-box">🌐</div>
-          <span>Globe Top</span>
-        </div>
-        <div style="display:flex; gap:12px; align-items:center; font-size:20px; cursor:pointer;">
-          <span onclick="alert('Search clicked')">🔍</span>
-          <span onclick="alert('Notifications clicked')">🔔</span>
-        </div>
-      </div>
-    </div>
-    
-    <div class="sub-tabs">
-      <button class="sub-tab active" onclick="switchHomeTab(this, 'home')">Home</button>
-      <button class="sub-tab" onclick="switchHomeTab(this, 'following')">Following</button>
-      <button class="sub-tab" onclick="switchHomeTab(this, 'live')">Live</button>
-      <button class="sub-tab" onclick="switchHomeTab(this, 'gaming')">Gaming</button>
-      <button class="sub-tab" onclick="switchHomeTab(this, 'travel')">Travel</button>
-    </div>
-
-    <div class="feed-container" id="homeFeedContent">
-      <div class="video-card">
-        <div class="thumbnail" onclick="alert('Opening video player...')">🎬<div style="position:absolute; bottom:8px; right:8px; background:rgba(0,0,0,0.7); font-size:11px; padding:2px 6px; border-radius:4px;">12:45</div></div>
-        <div class="video-info-row">
-          <div class="channel-dp">👑</div>
-          <div class="video-meta">
-            <div class="video-title">Building an Ultimate Next-Gen Web App from Scratch</div>
-            <div class="channel-name">Ayaan Tech • 45K views • 2 days ago</div>
-          </div>
-        </div>
-        <div class="engage-bar">
-          <div style="display:flex; gap:8px;">
-            <button class="action-btn" onclick="toggleLike(this)">⭐ Like</button>
-            <button class="action-btn" onclick="alert('Share sheet opened')">➔ Share</button>
-          </div>
-          <button class="subscribe-btn" onclick="alert('Subscribed successfully!')">+ Subscribe</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 2. VOICE CLUB HUB (Talkin & Jitsi Style) -->
-  <div id="scVoice" class="main-screen">
-    <div class="ultra-top">
-      <div class="top-row">
-        <div class="app-brand">🎙️ Globe Voice Club</div>
-        <button class="action-btn" onclick="openNewRoomModal()" style="background:#00a884; color:#fff; font-weight:bold;">+ Create Room</button>
-      </div>
-    </div>
-
-    <div class="voice-hub-container">
-      <input type="text" placeholder="🔍 Search live voice rooms or topics..." style="width:100%; padding:10px 14px; background:#1f2c34; border:1px solid #2a3942; border-radius:12px; color:#fff; font-size:13px; outline:none;" onkeyup="filterRooms(this.value)">
-
-      <div id="voiceRoomList">
-        <div class="room-box" onclick="alert('Joining AyaanYouTubeVoiceChatRoom...')">
-          <div class="room-header-row">
-            <span class="room-badge">🔴 LIVE AUDIO</span>
-            <span style="font-size:11px; color:#8696a0;">👤 14 Listening</span>
-          </div>
-          <div class="room-title">AyaanYouTubeVoiceChatRoom</div>
-          <div class="room-desc">General discussion and creator updates with Founder Ayaan Ji.</div>
-          <div class="room-footer">
-            <span>Host: Ayaan Ji 👑</span>
-            <button style="background:#00a884; color:#fff; border:none; padding:4px 12px; border-radius:8px; font-weight:bold; cursor:pointer;">Join Stage</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- NEW ROOM MODAL -->
-  <div class="new-room-modal" id="newRoomModal">
-    <div class="modal-card">
-      <h3 style="margin-top:0; color:#00a884;">🎙️ Create New Voice Room</h3>
-      <label style="font-size:12px; color:#e9edef;">Room Title:</label>
-      <input type="text" id="inRoomTitle" class="p-in" placeholder="e.g. Desi Music Jam">
-      <label style="font-size:12px; color:#e9edef;">Category:</label>
-      <select id="inRoomCat" class="p-in">
-        <option value="General Talk">General Talk</option>
-        <option value="Gaming">Gaming (Free Fire)</option>
-        <option value="Music & Singing">Music & Singing</option>
-      </select>
-      <div style="display:flex; gap:10px; margin-top:10px;">
-        <button class="vip-save" style="background:#2a3942;" onclick="closeNewRoomModal()">Cancel</button>
-        <button class="vip-save" onclick="createNewRoomAction()">Launch Room 🚀</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 3. GROUPS -->
-  <div id="scGroups" class="main-screen">
-    <div class="ultra-top"><div class="app-brand">🌐 Groups & Tribes</div></div>
-    <div style="margin:12px; background:#1f2c34; border-radius:16px; padding:12px; border:1px solid #2a3942;" onclick="alert('Opening Community Group...')">
-      <div style="display:flex; gap:11px; align-items:center;"><div style="width:40px; height:40px; border-radius:50%; background:#00a884; display:flex; align-items:center; justify-content:center; color:#fff;">🎵</div><div><b>Desi Rap & Music Club</b><div style="font-size:11px; color:#00a884;">Active Community</div></div></div>
-    </div>
-  </div>
-
-  <!-- 4. GAMES HUB -->
-  <div id="scGames" class="main-screen">
-    <div class="ultra-top"><div class="app-brand">🎮 Glue Games Hub</div></div>
-    <div class="game-grid">
-      <div class="game-card" onclick="alert('Launching Free Fire Custom Room Arena!')">
-        <div style="font-size:36px; margin-bottom:6px;">🔥</div>
-        <b>Free Fire Arena</b><div style="font-size:11px; color:#00a884; margin-top:2px;">Custom & Tournaments</div>
-      </div>
-      <div class="game-card" onclick="alert('Launching Neon Racing Game!')">
-        <div style="font-size:36px; margin-bottom:6px;">🏎️</div>
-        <b>Neon Racing</b><div style="font-size:11px; color:#00a884; margin-top:2px;">Arcade Speed</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- 5. AI ASSISTANT HUB (Google Gemini 1.5 Flash Integration) -->
-  <div id="scAI" class="main-screen" style="display:none; flex-direction:column; height:calc(100vh - 70px);">
-    <div class="ultra-top"><div class="app-brand">✨ Globe AI Master Brain</div></div>
-    <div style="flex:1; padding:14px; overflow-y:auto; display:flex; flex-direction:column; gap:8px;" id="aiChatFeed">
-      <div class="msg-bubble"><b>Globe AI 🤖:</b> जय हिंद! अयान जी, आपका Google Gemini 1.5 Flash AI बॉट पूरी तरह एक्टिव हो चुका है। पूछिए क्या जानना है? 🔥</div>
-    </div>
-    <div style="background:#1f2c34; padding:10px 14px; display:flex; gap:10px;">
-      <input type="text" id="aiMsgIn" placeholder="Ask Google Gemini AI..." style="flex:1; background:#111b21; border:1px solid #2a3942; color:#fff; padding:8px 12px; border-radius:16px; outline:none;" onkeypress="if(event.key==='Enter') sendAiMsg()">
-      <button style="background:#00a884; color:#fff; border:none; padding:8px 14px; border-radius:16px; font-weight:bold; cursor:pointer;" onclick="sendAiMsg()">Ask</button>
-    </div>
-  </div>
-
-  <!-- 6. CHATS (WhatsApp/Telegram Style with Firebase & Anti-Slang Shield) -->
-  <div id="scChats" class="main-screen">
-    <div class="ultra-top"><div class="app-brand">💬 Chats (Live Firebase)</div></div>
-    
-    <div class="chat-item" onclick="openDm('Brother (Bhai)', '👦', '+91 98765 43210')">
-      <div style="display:flex; align-items:center; gap:12px; flex:1;">
-        <div class="channel-dp">👦</div>
-        <div>
-          <b>Brother (Bhai) 🇮🇳</b>
-          <div style="font-size:12px; color:#00a884;">Tap to open Live DM...</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- DM Modal -->
-    <div class="dm-modal" id="dmModal">
-      <div class="dm-header">
-        <div style="display:flex; align-items:center; gap:10px;">
-          <button style="background:none; border:none; color:#fff; font-size:18px; cursor:pointer;" onclick="closeDmModal()">⬅</button>
-          <b id="dmTitle">Friend</b>
-        </div>
-        <button style="background:#ea4335; color:#fff; border:none; padding:4px 10px; border-radius:10px; font-size:11px; font-weight:bold; cursor:pointer;" onclick="closeDmModal()">Back</button>
-      </div>
-      <div class="dm-body" id="dmFeed">
-        <div class="msg-bubble">🟢 Connected to Firebase (globe-talk-98775). Globe AI Anti-Slang Shield active!</div>
-      </div>
-      <div style="background:#1f2c34; padding:10px 14px; display:flex; gap:10px;">
-        <input type="text" id="dmIn" placeholder="Type a live message..." style="flex:1; background:#111b21; border:1px solid #2a3942; color:#fff; padding:8px 12px; border-radius:16px; outline:none;" onkeypress="if(event.key==='Enter') sendLiveMessage()">
-        <button style="background:#00a884; color:#fff; border:none; padding:8px 14px; border-radius:16px; font-weight:bold; cursor:pointer;" onclick="sendLiveMessage()">Send</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 7. PROFILE (VIP Customizable View) -->
-  <div id="scYou" class="main-screen">
-    <div class="prof-top">
-      <div class="prof-dp" id="pAv" onclick="triggerPhotoUpload()" title="Change Profile Photo">😎</div>
-      <div style="font-size:18px; font-weight:bold;" id="pNameDisp">Ayaan Ji</div>
-      <div style="font-size:12px; color:#00a884; margin-top:2px;">👑 FOUNDER • @ayaan_official</div>
-      <div style="font-size:11px; color:#8696a0; margin-top:4px;">🇮🇳 India | 15 Years | Creator & Producer</div>
-      
-      <!-- Direct Action Buttons Visible Instantly on Profile Open -->
-      <div class="profile-action-row">
-        <button class="profile-btn" style="background:#00a884; color:#fff;" onclick="alert('Editing Profile Details...')">✏️ Edit Profile</button>
-        <button class="profile-btn" style="background:#2a3942; color:#fff;" onclick="alert('Privacy Settings: Phone number and personal details are hidden by default for safety!')">🔒 Privacy Settings</button>
-      </div>
-    </div>
-
-    <div class="p-card">
-      <div style="font-size:13px; color:#00a884; font-weight:bold; margin-bottom:8px;">⚙️ Direct Account Settings & Options</div>
-      <label style="font-size:11px; color:#8696a0;">Display Name:</label>
-      <input type="text" class="p-in" id="inPName" value="Ayaan Ji" placeholder="Your Name">
-      <label style="font-size:11px; color:#8696a0;">Gender:</label>
-      <select class="p-in" id="inPGen">
-        <option value="♂️ Male">♂️ Male</option>
-        <option value="♀️ Female">♀️ Female</option>
-      </select>
-      <label style="font-size:11px; color:#8696a0;">Country:</label>
-      <select class="p-in" id="inPCountry">
-        <option value="🇮🇳 India">🇮🇳 India</option>
-        <option value="🇰🇷 South Korea">🇰🇷 South Korea</option>
-      </select>
-    </div>
-
-    <button class="vip-save" onclick="saveProfile()" style="margin:12px; width:calc(100% - 24px);">Save Profile Settings</button>
-  </div>
-
-  <!-- BOTTOM NAVIGATION BAR (7 Tabs) -->
-  <div class="nav-7">
-    <button class="n-tab active" id="tbHome" onclick="goMain('Home')"><span>🏠</span>Home</button>
-    <button class="n-tab" id="tbVoice" onclick="goMain('Voice')"><span>🎙️</span>Voice</button>
-    <button class="n-tab" id="tbGroups" onclick="goMain('Groups')"><span>🌐</span>Groups</button>
-    <button class="n-tab" id="tbGames" onclick="goMain('Games')"><span>🎮</span>Games</button>
-    <button class="n-tab" id="tbAI" onclick="goMain('AI')"><span>✨</span>AI Bot</button>
-    <button class="n-tab" id="tbChats" onclick="goMain('Chats')"><span>💬</span>Chats</button>
-    <button class="n-tab" id="tbYou" onclick="goMain('You')"><span>👤</span>You</button>
-  </div>
-
-  <script>
-    let userName = "Ayaan Ji";
-
-    function goMain(name) {
-      document.querySelectorAll('.main-screen').forEach(function(s) { s.classList.remove('active'); });
-      document.querySelectorAll('.n-tab').forEach(function(t) { t.classList.remove('active'); });
-      let target = document.getElementById('sc' + name);
-      if(target) target.classList.add('active');
-      let btn = document.getElementById('tb' + name);
-      if(btn) btn.classList.add('active');
-      window.scrollTo(0, 0);
-    }
-
-    function switchHomeTab(el, tabName) {
-      document.querySelectorAll('.sub-tab').forEach(function(t) { t.classList.remove('active'); });
-      el.classList.add('active');
-      let feed = document.getElementById('homeFeedContent');
-      if(tabName === 'live') {
-        feed.innerHTML = '<div class="video-card"><div class="thumbnail" style="height:150px;">🔴 LIVE STREAM (1.4K Watching)</div></div>';
-      } else
-<!DOCTYPE html>
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
@@ -342,7 +21,7 @@
             padding-bottom: 100px;
         }
 
-        /* 1. CINEMATIC COSMIC SPLASH SCREEN (3 सेकंड जादुई अनुभव) */
+        /* 1. CINEMATIC COSMIC SPLASH SCREEN (3 सेकंड जादुई अनुभव)[span_6](start_span)[span_6](end_span) */
         #splashScreen {
             position: fixed;
             top: 0;
@@ -431,7 +110,7 @@
             background: rgba(15, 23, 42, 0.9);
         }
 
-        /* MAIN APP LAYOUT CONTAINER */
+        /* MAIN APP LAYOUT CONTAINER[span_7](start_span)[span_7](end_span) */
         .app-container {
             width: 100%;
             max-width: 480px;
@@ -440,7 +119,7 @@
             align-items: center;
         }
 
-        /* TOP PROFESSIONAL NAVBAR */
+        /* TOP PROFESSIONAL NAVBAR[span_8](start_span)[span_8](end_span) */
         .navbar {
             position: fixed;
             top: 0;
@@ -481,7 +160,7 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* SEARCH BAR */
+        /* SEARCH BAR[span_9](start_span)[span_9](end_span) */
         .search-container {
             position: fixed;
             top: 62px;
@@ -514,7 +193,7 @@
             outline: none;
         }
 
-        /* CATEGORIES BAR (6 Tabs) */
+        /* CATEGORIES BAR (6 Tabs)[span_10](start_span)[span_10](end_span) */
         .categories-bar {
             position: fixed;
             top: 118px;
@@ -549,7 +228,7 @@
             border-color: #a855f7;
         }
 
-        /* VIDEO FEED CONTAINER */
+        /* VIDEO FEED CONTAINER[span_11](start_span)[span_11](end_span) */
         .feed-container {
             margin-top: 175px;
             width: 100%;
@@ -602,7 +281,7 @@
             font-weight: bold;
         }
         
-        /* NO-POPUP REAL INTERACTIVE BUTTONS */
+        /* NO-POPUP REAL INTERACTIVE BUTTONS[span_12](start_span)[span_12](end_span) */
         .action-buttons-group {
             display: flex;
             gap: 8px;
@@ -647,7 +326,7 @@
 </head>
 <body>
 
-    <!-- 1. CINEMATIC COSMIC SPLASH SCREEN (3 सेकंड जादुई अनुभव) -->
+    <!-- 1. CINEMATIC COSMIC SPLASH SCREEN (3 सेकंड जादुई अनुभव)[span_13](start_span)[span_13](end_span) -->
     <div id="splashScreen">
         <div class="universe-orbit">
             <div class="center-logo-emerge">GT</div>
@@ -658,7 +337,7 @@
         <div class="splash-subtitle">CLOUD FLOW MASTER HUB</div>
     </div>
 
-    <!-- MAIN APP CONTAINER -->
+    <!-- MAIN APP CONTAINER[span_14](start_span)[span_14](end_span) -->
     <div class="app-container">
         <!-- Top Navbar -->
         <div class="navbar">
@@ -668,7 +347,7 @@
             </div>
         </div>
 
-        <!-- Search Bar -->
+        <!-- Search Bar[span_15](start_span)[span_15](end_span) -->
         <div class="search-container">
             <div class="search-box">
                 <input type="text" class="search-input" id="searchInput" placeholder="500 वीडियो डेटाबेस में खोजें..." onkeyup="filterVideos()">
@@ -676,7 +355,7 @@
         </div>
     </div>
 
-    <!-- CATEGORIES BAR (6 Tabs) -->
+    <!-- CATEGORIES BAR (6 Tabs)[span_16](start_span)[span_16](end_span) -->
     <div class="categories-bar" style="max-width: 480px;">
         <div class="cat-chip active" onclick="filterCategory('all', this)">🔥 All Traffic (500)</div>
         <div class="cat-chip" onclick="filterCategory('shayari', this)">📜 Shayari</div>
@@ -686,18 +365,18 @@
         <div class="cat-chip" onclick="filterCategory('tech', this)">💻 Tech</div>
     </div>
 
-    <!-- FEED CONTAINER -->
+    <!-- FEED CONTAINER[span_17](start_span)[span_17](end_span) -->
     <div class="feed-container" id="videoFeed">
-        <!-- वीडियोज़ यहाँ लेजी-लोडिंग के साथ आएंगे ताकि ऐप कभी क्रैश न हो -->
+        <!-- वीडियोज़ यहाँ लेजी-लोडिंग के साथ आएंगे[span_18](start_span)[span_18](end_span) -->
     </div>
-    <div class="loading-more" id="loadingText">और वीडियो लोड हो रहे हैं...</div>
+    <div class="loading-more" id="loadingText">और वीडियो लोड हो रहे हैं...[span_19](start_span)[span_19](end_span)</div>
 
-    <!-- Firebase SDK & Master Cloud Flow Script -->
+    <!-- Firebase SDK & Master Cloud Flow Script[span_20](start_span)[span_20](end_span) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // Google Firebase & Cloud Storage Config
+        // Google Firebase & Cloud Storage Config[span_21](start_span)[span_21](end_span)
         const firebaseConfig = {
             apiKey: "AIzaSyAmCn_Cvmo1BNRglZadm1LjOwudEfrGSYk",
             projectId: "globe-talk-98775",
