@@ -18,10 +18,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-bottom: 100px;
+            padding-bottom: 120px;
         }
 
-        /* 1. CINEMATIC COSMIC SPLASH SCREEN (3 सेकंड जादुई अनुभव)[span_6](start_span)[span_6](end_span) */
+        /* 1. CINEMATIC COSMIC SPLASH SCREEN (3 सेकंड जादुई अनुभव) */
         #splashScreen {
             position: fixed;
             top: 0;
@@ -110,7 +110,7 @@
             background: rgba(15, 23, 42, 0.9);
         }
 
-        /* MAIN APP LAYOUT CONTAINER[span_7](start_span)[span_7](end_span) */
+        /* MAIN APP LAYOUT CONTAINER */
         .app-container {
             width: 100%;
             max-width: 480px;
@@ -119,7 +119,7 @@
             align-items: center;
         }
 
-        /* TOP PROFESSIONAL NAVBAR[span_8](start_span)[span_8](end_span) */
+        /* TOP PROFESSIONAL NAVBAR */
         .navbar {
             position: fixed;
             top: 0;
@@ -160,7 +160,7 @@
             -webkit-text-fill-color: transparent;
         }
 
-        /* SEARCH BAR[span_9](start_span)[span_9](end_span) */
+        /* SEARCH BAR */
         .search-container {
             position: fixed;
             top: 62px;
@@ -193,7 +193,7 @@
             outline: none;
         }
 
-        /* CATEGORIES BAR (6 Tabs)[span_10](start_span)[span_10](end_span) */
+        /* CATEGORIES BAR (6 Tabs) */
         .categories-bar {
             position: fixed;
             top: 118px;
@@ -228,7 +228,7 @@
             border-color: #a855f7;
         }
 
-        /* VIDEO FEED CONTAINER[span_11](start_span)[span_11](end_span) */
+        /* VIDEO FEED CONTAINER */
         .feed-container {
             margin-top: 175px;
             width: 100%;
@@ -281,7 +281,7 @@
             font-weight: bold;
         }
         
-        /* NO-POPUP REAL INTERACTIVE BUTTONS[span_12](start_span)[span_12](end_span) */
+        /* NO-POPUP REAL INTERACTIVE BUTTONS */
         .action-buttons-group {
             display: flex;
             gap: 8px;
@@ -322,11 +322,46 @@
             font-size: 13px;
             font-weight: 600;
         }
+
+        /* 🌟 BOTTOM NAVIGATION BAR (नीचे के पूरे 6 ऑप्शन: Home, Gaming, Chatting, AI/Voice Room, You, Profile) */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 480px;
+            background: rgba(15, 23, 42, 0.98);
+            backdrop-filter: blur(14px);
+            border-top: 1px solid rgba(168, 85, 247, 0.3);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 1000;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #94a3b8;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+        }
+        .nav-item span.icon {
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+        .nav-item.active, .nav-item:hover {
+            color: #38bdf8;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+        }
     </style>
 </head>
 <body>
 
-    <!-- 1. CINEMATIC COSMIC SPLASH SCREEN (3 सेकंड जादुई अनुभव)[span_13](start_span)[span_13](end_span) -->
+    <!-- 1. CINEMATIC COSMIC SPLASH SCREEN (3 सेकंड जादुई अनुभव) -->
     <div id="splashScreen">
         <div class="universe-orbit">
             <div class="center-logo-emerge">GT</div>
@@ -337,7 +372,7 @@
         <div class="splash-subtitle">CLOUD FLOW MASTER HUB</div>
     </div>
 
-    <!-- MAIN APP CONTAINER[span_14](start_span)[span_14](end_span) -->
+    <!-- MAIN APP CONTAINER -->
     <div class="app-container">
         <!-- Top Navbar -->
         <div class="navbar">
@@ -347,7 +382,7 @@
             </div>
         </div>
 
-        <!-- Search Bar[span_15](start_span)[span_15](end_span) -->
+        <!-- Search Bar -->
         <div class="search-container">
             <div class="search-box">
                 <input type="text" class="search-input" id="searchInput" placeholder="500 वीडियो डेटाबेस में खोजें..." onkeyup="filterVideos()">
@@ -355,7 +390,7 @@
         </div>
     </div>
 
-    <!-- CATEGORIES BAR (6 Tabs)[span_16](start_span)[span_16](end_span) -->
+    <!-- CATEGORIES BAR (6 Tabs) -->
     <div class="categories-bar" style="max-width: 480px;">
         <div class="cat-chip active" onclick="filterCategory('all', this)">🔥 All Traffic (500)</div>
         <div class="cat-chip" onclick="filterCategory('shayari', this)">📜 Shayari</div>
@@ -365,18 +400,46 @@
         <div class="cat-chip" onclick="filterCategory('tech', this)">💻 Tech</div>
     </div>
 
-    <!-- FEED CONTAINER[span_17](start_span)[span_17](end_span) -->
+    <!-- FEED CONTAINER -->
     <div class="feed-container" id="videoFeed">
-        <!-- वीडियोज़ यहाँ लेजी-लोडिंग के साथ आएंगे[span_18](start_span)[span_18](end_span) -->
+        <!-- वीडियोज़ यहाँ लेजी-लोडिंग के साथ आएंगे -->
     </div>
-    <div class="loading-more" id="loadingText">और वीडियो लोड हो रहे हैं...[span_19](start_span)[span_19](end_span)</div>
+    <div class="loading-more" id="loadingText">और वीडियो लोड हो रहे हैं...</div>
 
-    <!-- Firebase SDK & Master Cloud Flow Script[span_20](start_span)[span_20](end_span) -->
+    <!-- 🌟 BOTTOM NAVIGATION BAR (नीचे के पूरे 6 ऑप्शन) -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchNav('home', this)">
+            <span class="icon">🏠</span>
+            <span>Home</span>
+        </div>
+        <div class="nav-item" onclick="switchNav('gaming', this)">
+            <span class="icon">🎮</span>
+            <span>Gaming</span>
+        </div>
+        <div class="nav-item" onclick="switchNav('chatting', this)">
+            <span class="icon">💬</span>
+            <span>Chatting</span>
+        </div>
+        <div class="nav-item" onclick="switchNav('airoom', this)">
+            <span class="icon">🤖</span>
+            <span>AI Room</span>
+        </div>
+        <div class="nav-item" onclick="switchNav('you', this)">
+            <span class="icon">✨</span>
+            <span>You</span>
+        </div>
+        <div class="nav-item" onclick="switchNav('profile', this)">
+            <span class="icon">👤</span>
+            <span>Profile</span>
+        </div>
+    </div>
+
+    <!-- Firebase SDK & Master Cloud Flow Script -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // Google Firebase & Cloud Storage Config[span_21](start_span)[span_21](end_span)
+        // Google Firebase & Cloud Storage Config (AI & Voice Chat Room Permitted)
         const firebaseConfig = {
             apiKey: "AIzaSyAmCn_Cvmo1BNRglZadm1LjOwudEfrGSYk",
             projectId: "globe-talk-98775",
@@ -507,6 +570,13 @@
                 let categories = card.getAttribute('data-category');
                 card.style.display = (cat === 'all' || categories.includes(cat)) ? "" : "none";
             }
+        }
+
+        // Bottom Navigation Switcher
+        function switchNav(tab, element) {
+            let items = document.getElementsByClassName('nav-item');
+            for(let item of items) item.classList.remove('active');
+            element.classList.add('active');
         }
     </script>
 </body>
