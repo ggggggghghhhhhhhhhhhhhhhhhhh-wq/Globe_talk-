@@ -2041,4 +2041,11 @@ Yah update file jaisi dalunga yah sidha chalne lagegi na aur dekh lena naam sab 
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
+const express = require('express');
+const cors = require('cors'); // यह परमिशन के लिए बहुत जरूरी है
+const app = express();
+
+// यह कमांड सर्वर को पूरी परमिशन देती है कि वह आपकी ऐप से सीधा डेटा लेन-देन कर सके
+app.use(cors());
+app.use(express.json());
 
