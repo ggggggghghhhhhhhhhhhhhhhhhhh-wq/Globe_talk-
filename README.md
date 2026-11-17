@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Globe Talk - Cloud Flow Master Hub</title>
+    <title>Globe Talk - Cloud Flow Master Hub & Pro Room</title>
+    <!-- React & Babel for Embedded React Component Integration -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         *, *::before, *::after {
             box-sizing: border-box;
@@ -18,7 +25,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding-bottom: 100px;
+            padding-bottom: 120px;
         }
 
         /* 1. CINEMATIC COSMIC SPLASH SCREEN (3 सेकंड जादुई अनुभव) */
@@ -281,7 +288,6 @@
             font-weight: bold;
         }
         
-        /* NO-POPUP REAL INTERACTIVE BUTTONS */
         .action-buttons-group {
             display: flex;
             gap: 8px;
@@ -322,11 +328,60 @@
             font-size: 13px;
             font-weight: 600;
         }
+
+        /* 🌟 BOTTOM NAVIGATION BAR */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            max-width: 480px;
+            background: rgba(15, 23, 42, 0.98);
+            backdrop-filter: blur(14px);
+            border-top: 1px solid rgba(168, 85, 247, 0.3);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 1000;
+        }
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            color: #94a3b8;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+        }
+        .nav-item span.icon {
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+        .nav-item.active, .nav-item:hover {
+            color: #38bdf8;
+            text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
+        }
+
+        /* AI ROOM OVERLAY CONTAINER */
+        #aiRoomRoot {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2000;
+            background: #030712;
+            justify-content: center;
+            align-items: center;
+        }
     </style>
 </head>
 <body>
 
-    <!-- 1. CINEMATIC COSMIC SPLASH SCREEN (3 सेकंड जादुई अनुभव) -->
+    <!-- 1. CINEMATIC COSMIC SPLASH SCREEN -->
     <div id="splashScreen">
         <div class="universe-orbit">
             <div class="center-logo-emerge">GT</div>
@@ -337,8 +392,8 @@
         <div class="splash-subtitle">CLOUD FLOW MASTER HUB</div>
     </div>
 
-    <!-- MAIN APP CONTAINER -->
-    <div class="app-container">
+    <!-- MAIN CLOUD FLOW HUB APP -->
+    <div id="mainHubApp" class="app-container">
         <!-- Top Navbar -->
         <div class="navbar">
             <div class="nav-left">
@@ -353,30 +408,60 @@
                 <input type="text" class="search-input" id="searchInput" placeholder="500 वीडियो डेटाबेस में खोजें..." onkeyup="filterVideos()">
             </div>
         </div>
+
+        <!-- CATEGORIES BAR (6 Tabs) -->
+        <div class="categories-bar" style="max-width: 480px;">
+            <div class="cat-chip active" onclick="filterCategory('all', this)">🔥 All Traffic (500)</div>
+            <div class="cat-chip" onclick="filterCategory('shayari', this)">📜 Shayari</div>
+            <div class="cat-chip" onclick="filterCategory('gaming', this)">🎮 Gaming</div>
+            <div class="cat-chip" onclick="filterCategory('music', this)">🎵 Music</div>
+            <div class="cat-chip" onclick="filterCategory('animation', this)">🎬 Animation</div>
+            <div class="cat-chip" onclick="filterCategory('tech', this)">💻 Tech</div>
+        </div>
+
+        <!-- FEED CONTAINER -->
+        <div class="feed-container" id="videoFeed">
+            <!-- वीडियोज़ लेजी-लोडिंग -->
+        </div>
+        <div class="loading-more" id="loadingText">और वीडियो लोड हो रहे हैं...</div>
     </div>
 
-    <!-- CATEGORIES BAR (6 Tabs) -->
-    <div class="categories-bar" style="max-width: 480px;">
-        <div class="cat-chip active" onclick="filterCategory('all', this)">🔥 All Traffic (500)</div>
-        <div class="cat-chip" onclick="filterCategory('shayari', this)">📜 Shayari</div>
-        <div class="cat-chip" onclick="filterCategory('gaming', this)">🎮 Gaming</div>
-        <div class="cat-chip" onclick="filterCategory('music', this)">🎵 Music</div>
-        <div class="cat-chip" onclick="filterCategory('animation', this)">🎬 Animation</div>
-        <div class="cat-chip" onclick="filterCategory('tech', this)">💻 Tech</div>
+    <!-- 🌟 AI ROOM CONTAINER (React Pro Voice App Root) -->
+    <div id="aiRoomRoot"></div>
+
+    <!-- 🌟 BOTTOM NAVIGATION BAR (Fully Permitted & Active) -->
+    <div class="bottom-nav" style="max-width: 480px; margin: 0 auto; left: 0; right: 0;">
+        <div class="nav-item active" onclick="switchNav('home', this)">
+            <span class="icon">🏠</span>
+            <span>Home</span>
+        </div>
+        <div class="nav-item" onclick="switchNav('gaming', this)">
+            <span class="icon">🎮</span>
+            <span>Gaming</span>
+        </div>
+        <div class="nav-item" onclick="switchNav('chatting', this)">
+            <span class="icon">💬</span>
+            <span>Chatting</span>
+        </div>
+        <div class="nav-item" onclick="switchNav('airoom', this)">
+            <span class="icon">🤖</span>
+            <span>AI Room</span>
+        </div>
+        <div class="nav-item" onclick="switchNav('you', this)">
+            <span class="icon">✨</span>
+            <span>You</span>
+        </div>
+        <div class="nav-item" onclick="switchNav('profile', this)">
+            <span class="icon">👤</span>
+            <span>Profile</span>
+        </div>
     </div>
 
-    <!-- FEED CONTAINER -->
-    <div class="feed-container" id="videoFeed">
-        <!-- वीडियोज़ यहाँ लेजी-लोडिंग के साथ आएंगे ताकि ऐप कभी क्रैश न हो -->
-    </div>
-    <div class="loading-more" id="loadingText">और वीडियो लोड हो रहे हैं...</div>
-
-    <!-- Firebase SDK & Master Cloud Flow Script -->
+    <!-- Firebase SDK & Master Cloud Flow Script with Live Permissions -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // Google Firebase & Cloud Storage Config
         const firebaseConfig = {
             apiKey: "AIzaSyAmCn_Cvmo1BNRglZadm1LjOwudEfrGSYk",
             projectId: "globe-talk-98775",
@@ -387,7 +472,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // 500 वीडियोज़ की मास्टर लिस्ट तैयार करना
         let allVideos = [];
         const sampleVideos = [
             { id: "3JZ_D3ELwOQ", title: "दिल को छू लेने वाली रोमांटिक शायरी और पोएट्री स्पेशल", category: "shayari", channel: "Ayaan Ji Official" },
@@ -397,7 +481,6 @@
             { id: "3JZ_D3ELwOQ", title: "Globe Talk Mobile App Cloud Flow & Coding Guide", category: "tech", channel: "Ayaan Ji Tech" }
         ];
 
-        // ठीक 500 वीडियोज़ का डेटा जनरेट करना
         for(let i = 1; i <= 100; i++) {
             sampleVideos.forEach((v, idx) => {
                 allVideos.push({
@@ -410,7 +493,7 @@
         }
 
         let currentIndex = 0;
-        const batchSize = 10; // क्रैश रोकने के लिए एक बार में 10 वीडियो लोड होंगे
+        const batchSize = 10;
 
         window.addEventListener('load', () => {
             setTimeout(() => {
@@ -421,16 +504,16 @@
             loadMoreVideos();
         });
 
-        // लेजी-लोडिंग और क्लाउड फ्लो फंक्शन
         function loadMoreVideos() {
             let feed = document.getElementById('videoFeed');
             let loadingText = document.getElementById('loadingText');
+            if(!feed) return;
 
             let endIndex = currentIndex + batchSize;
             if (endIndex > allVideos.length) endIndex = allVideos.length;
 
             if (currentIndex >= allVideos.length) {
-                loadingText.innerText = "सभी 500 वीडियो लोड हो चुके हैं!";
+                if(loadingText) loadingText.innerText = "सभी 500 वीडियो लोड हो चुके हैं!";
                 return;
             }
 
@@ -462,11 +545,9 @@
                 `;
                 feed.appendChild(card);
             }
-
             currentIndex = endIndex;
         }
 
-        // स्क्रॉल करने पर ऑटोमैटिक नए वीडियो लोड होना
         window.addEventListener('scroll', () => {
             if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 200) {
                 loadMoreVideos();
@@ -475,7 +556,6 @@
     </script>
 
     <script>
-        // Direct Working Buttons (No Popups)
         function toggleLike(btn) {
             btn.classList.toggle('active-state');
             btn.innerText = btn.classList.contains('active-state') ? "💖 Liked" : "❤️ Like";
@@ -486,7 +566,6 @@
             btn.innerText = btn.classList.contains('active-state') ? "✔ Following" : "➕ Follow";
         }
 
-        // Search Filter
         function filterVideos() {
             let input = document.getElementById('searchInput').value.toLowerCase();
             let cards = document.getElementsByClassName('video-card');
@@ -496,7 +575,6 @@
             }
         }
 
-        // Category Filter
         function filterCategory(cat, element) {
             let chips = document.getElementsByClassName('cat-chip');
             for(let c of chips) c.classList.remove('active');
@@ -508,6 +586,195 @@
                 card.style.display = (cat === 'all' || categories.includes(cat)) ? "" : "none";
             }
         }
+
+        // 🌟 Full Permitted Bottom Navigation Switcher (AI Room, Chatting, Gaming, Profile Open)
+        function switchNav(tab, element) {
+            let items = document.getElementsByClassName('nav-item');
+            for(let item of items) item.classList.remove('active');
+            element.classList.add('active');
+
+            let mainHub = document.getElementById('mainHubApp');
+            let aiRoot = document.getElementById('aiRoomRoot');
+
+            if (tab === 'airoom' || tab === 'chatting' || tab === 'profile' || tab === 'gaming' || tab === 'you') {
+                mainHub.style.display = 'none';
+                aiRoot.style.display = 'flex';
+            } else {
+                aiRoot.style.display = 'none';
+                mainHub.style.display = 'flex';
+            }
+        }
+    </script>
+
+    <!-- 🌟 REACT SCRIPT FOR GLOBE TALK PRO VOICE & STAGE ROOM -->
+    <script type="text/babel">
+        const {
+            Mic, MicOff, Volume2, VolumeX, Radio, Users, Gift, Smile, MessageCircle, Send, Plus, Crown, Shield, Award, Sparkles, LogOut, Maximize2, Minimize2, Lock, Globe, Compass, Flame, Music, Gamepad2, BookOpen, Coffee, Tv, HelpCircle, Check, X, ChevronRight, ChevronLeft, Search, Zap, Star, Coins, Bell, UserPlus, UserCheck, Settings, Share2, Swords, PhoneCall, PhoneOff, AlertCircle
+        } = lucide;
+
+        function GlobeTalkPro() {
+            const [currentScreen, setCurrentScreen] = React.useState('lobby');
+            const [activeTab, setActiveTab] = React.useState('All');
+            const [searchQuery, setSearchQuery] = React.useState('');
+
+            const [currentUser, setCurrentUser] = React.useState({
+                id: `user-${Math.floor(Math.random() * 90000) + 10000}`,
+                name: 'Ayaan Khan',
+                initials: 'AK',
+                gradient: 'from-cyan-500 to-blue-600',
+                coins: 500,
+                vipLevel: 7,
+                followers: 1240,
+                bio: 'Elite Host | Audiophile & Tech Geek 🚀',
+                isFollowing: false,
+            });
+
+            const [walletCoins, setWalletCoins] = React.useState(500);
+            const [showTopUpModal, setShowTopUpModal] = React.useState(false);
+            const [showNotifications, setShowNotifications] = React.useState(false);
+            const [showCreateModal, setShowCreateModal] = React.useState(false);
+
+            const [newRoomTitle, setNewRoomTitle] = React.useState("✨ Global Tech & AI Hangout Lounge");
+            const [newRoomCategory, setNewRoomCategory] = React.useState("Tech");
+            const [isPasswordLocked, setIsPasswordLocked] = React.useState(false);
+            const [roomPassword, setRoomPassword] = React.useState("");
+            const [selectedWallpaper, setSelectedWallpaper] = React.useState(0);
+
+            const wallpapers = [
+                { id: 0, name: 'Neon Pulse', bg: 'bg-gradient-to-br from-slate-950 via-indigo-950 to-purple-950', accent: 'cyan', preview: 'from-cyan-600 to-purple-600' },
+                { id: 1, name: 'Audio Galaxy', bg: 'bg-gradient-to-tr from-black via-slate-900 to-blue-950', accent: 'blue', preview: 'from-blue-600 to-indigo-900' },
+                { id: 2, name: 'Tech Grid', bg: 'bg-gradient-to-br from-zinc-950 via-neutral-900 to-cyan-950', accent: 'emerald', preview: 'from-emerald-600 to-cyan-800' },
+                { id: 3, name: 'Mystic Forest', bg: 'bg-gradient-to-tr from-stone-950 via-emerald-950 to-teal-950', accent: 'emerald', preview: 'from-emerald-700 to-teal-900' },
+                { id: 4, name: 'Vibe Lounge', bg: 'bg-gradient-to-br from-neutral-950 via-purple-950 to-rose-950', accent: 'pink', preview: 'from-purple-600 to-rose-700' },
+            ];
+
+            const [roomsList, setRoomsList] = React.useState([
+                { id: 'room-1', title: '🚀 Future of Generative AI & Web3 Tech', category: 'Tech', hostName: 'Ayaan Khan', hostAvatar: 'AK', listenersCount: 342, wallpaperId: 0, isLocked: false },
+                { id: 'room-2', title: '🎸 Late Night Acoustic Jam & Poetry', category: 'Music', hostName: 'Elena Rostova', hostAvatar: 'ER', listenersCount: 189, wallpaperId: 4, isLocked: false },
+            ]);
+
+            const [currentRoom, setCurrentRoom] = React.useState(null);
+            const [stageSeats, setStageSeats] = React.useState(Array(10).fill(null));
+            const [userRole, setUserRole] = React.useState('audience');
+            const [isSelfMuted, setIsSelfMuted] = React.useState(true);
+            const [audienceList, setAudienceList] = React.useState([]);
+
+            const joinRoom = (room, role = 'audience') => {
+                setCurrentRoom(room);
+                setUserRole(role);
+                setCurrentScreen('room');
+                setIsSelfMuted(true);
+
+                const newSeats = Array(10).fill(null);
+                newSeats[0] = {
+                    id: `host-${room.id}`,
+                    name: room.hostName,
+                    initials: room.hostAvatar,
+                    gradient: 'from-amber-500 to-yellow-600',
+                    isHost: true,
+                    isMuted: false,
+                    isSpeaking: false,
+                };
+                setStageSeats(newSeats);
+                setAudienceList([
+                    { id: 'aud-1', name: 'Rahul Sharma', initials: 'RS', gradient: 'from-cyan-500 to-blue-500', vip: 3 },
+                ]);
+            };
+
+            const leaveRoom = () => {
+                setCurrentRoom(null);
+                setUserRole('audience');
+                setCurrentScreen('lobby');
+            };
+
+            const handleCreateRoom = (e) => {
+                e.preventDefault();
+                const newRoom = {
+                    id: `room-${Date.now()}`,
+                    title: newRoomTitle,
+                    category: newRoomCategory,
+                    hostName: currentUser.name,
+                    hostAvatar: currentUser.initials,
+                    listenersCount: 1,
+                    wallpaperId: selectedWallpaper,
+                    isLocked: isPasswordLocked,
+                };
+                setRoomsList(prev => [newRoom, ...prev]);
+                setShowCreateModal(false);
+                joinRoom(newRoom, 'host');
+            };
+
+            return (
+                <div className="flex justify-center items-center min-h-screen bg-slate-950 font-sans select-none overflow-hidden w-full">
+                    <div className="relative w-full max-w-[480px] h-[100vh] bg-slate-950 text-slate-100 flex flex-col overflow-hidden shadow-2xl border border-slate-800">
+                        
+                        {currentScreen === 'lobby' ? (
+                            <div className="flex-1 flex flex-col overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-indigo-950">
+                                <div className="flex justify-between items-center px-4 py-3 bg-slate-900/60 backdrop-blur-md border-b border-slate-800/80">
+                                    <div className="flex items-center gap-2.5">
+                                        <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 flex items-center justify-center shadow-lg">
+                                            <Globe className="text-white animate-spin-slow" size={20} />
+                                        </div>
+                                        <div>
+                                            <h1 className="font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-300 to-purple-400 text-base leading-tight">
+                                                Globe Talk Pro AI 🎙️
+                                            </h1>
+                                            <span className="text-[10px] text-slate-400 font-medium tracking-wide">Live Global Voice & Stage</span>
+                                        </div>
+                                    </div>
+                                    <button 
+                                        onClick={() => setShowCreateModal(true)}
+                                        className="flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-600 text-white rounded-xl text-xs font-bold shadow-lg"
+                                    >
+                                        <Plus size={15} />
+                                        <span>Create Room</span>
+                                    </button>
+                                </div>
+
+                                <div className="flex-1 overflow-y-auto p-4 space-y-3.5 custom-scrollbar">
+                                    <h2 className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+                                        <Radio size={13} className="text-rose-500 animate-pulse" /> Active Pro Voice Rooms
+                                    </h2>
+
+                                    {roomsList.map(room => {
+                                        const wp = wallpapers[room.wallpaperId] || wallpapers[0];
+                                        return (
+                                            <div 
+                                                key={room.id}
+                                                onClick={() => joinRoom(room, room.hostName === currentUser.name ? 'host' : 'audience')}
+                                                className={`p-4 rounded-2xl border border-slate-800/80 ${wp.bg} cursor-pointer shadow-xl`}
+                                            >
+                                                <h3 className="font-bold text-sm text-slate-100">{room.title}</h3>
+                                                <div className="flex justify-between items-center pt-2 mt-2 border-t border-slate-800/60">
+                                                    <span className="text-xs text-slate-300 font-medium">Host: {room.hostName}</span>
+                                                    <span className="px-3 py-1 bg-cyan-500 text-slate-950 font-black text-xs rounded-xl">Join Room</span>
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        ) : (
+                            <div className="flex-1 flex flex-col relative overflow-hidden bg-slate-900">
+                                <div className="flex justify-between items-center px-4 py-3 bg-slate-900 border-b border-slate-800">
+                                    <h2 className="font-bold text-xs text-white">{currentRoom?.title}</h2>
+                                    <button onClick={leaveRoom} className="px-3 py-1 bg-rose-500/20 text-rose-300 rounded-xl text-xs font-bold">
+                                        Leave
+                                    </button>
+                                </div>
+                                <div className="flex-1 p-4 flex flex-col items-center justify-center text-center">
+                                    <h3 className="text-sm font-bold text-cyan-300 mb-2">10-Seat Stage Active</h3>
+                                    <p className="text-xs text-slate-400">You are connected to the live voice room stage securely.</p>
+                                </div>
+                            </div>
+                        )}
+
+                    </div>
+                </div>
+            );
+        }
+
+        ReactDOM.createRoot(document.getElementById('aiRoomRoot')).render(<GlobeTalkPro />);
     </script>
 </body>
 </html>
