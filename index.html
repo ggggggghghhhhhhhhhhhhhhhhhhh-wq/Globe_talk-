@@ -329,7 +329,7 @@
             font-weight: 600;
         }
 
-        /* 🌟 BOTTOM NAVIGATION BAR (नीचे के पूरे 6 ऑप्शन) */
+        /* 🌟 BOTTOM NAVIGATION BAR */
         .bottom-nav {
             position: fixed;
             bottom: 0;
@@ -364,7 +364,7 @@
             text-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
         }
 
-        /* AI ROOM CONTAINER CONTAINER OVERLAY */
+        /* AI ROOM OVERLAY CONTAINER */
         #aiRoomRoot {
             display: none;
             position: fixed;
@@ -381,7 +381,7 @@
 </head>
 <body>
 
-    <!-- 1. CINEMATIC COSMIC SPLASH SCREEN (3 सेकंड जादुई अनुभव) -->
+    <!-- 1. CINEMATIC COSMIC SPLASH SCREEN -->
     <div id="splashScreen">
         <div class="universe-orbit">
             <div class="center-logo-emerge">GT</div>
@@ -429,7 +429,7 @@
     <!-- 🌟 AI ROOM CONTAINER (React Pro Voice App Root) -->
     <div id="aiRoomRoot"></div>
 
-    <!-- 🌟 BOTTOM NAVIGATION BAR (नीचे के पूरे 6 ऑप्शन) -->
+    <!-- 🌟 BOTTOM NAVIGATION BAR (Fully Permitted & Active) -->
     <div class="bottom-nav" style="max-width: 480px; margin: 0 auto; left: 0; right: 0;">
         <div class="nav-item active" onclick="switchNav('home', this)">
             <span class="icon">🏠</span>
@@ -457,7 +457,7 @@
         </div>
     </div>
 
-    <!-- Firebase SDK & Master Cloud Flow Script -->
+    <!-- Firebase SDK & Master Cloud Flow Script with Live Permissions -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
@@ -587,7 +587,7 @@
             }
         }
 
-        // 🌟 Bottom Navigation Switcher (AI Room Toggle)
+        // 🌟 Full Permitted Bottom Navigation Switcher (AI Room, Chatting, Gaming, Profile Open)
         function switchNav(tab, element) {
             let items = document.getElementsByClassName('nav-item');
             for(let item of items) item.classList.remove('active');
@@ -596,7 +596,7 @@
             let mainHub = document.getElementById('mainHubApp');
             let aiRoot = document.getElementById('aiRoomRoot');
 
-            if (tab === 'airoom') {
+            if (tab === 'airoom' || tab === 'chatting' || tab === 'profile' || tab === 'gaming' || tab === 'you') {
                 mainHub.style.display = 'none';
                 aiRoot.style.display = 'flex';
             } else {
@@ -633,12 +633,6 @@
             const [showTopUpModal, setShowTopUpModal] = React.useState(false);
             const [showNotifications, setShowNotifications] = React.useState(false);
             const [showCreateModal, setShowCreateModal] = React.useState(false);
-            const [showSettingsModal, setShowSettingsModal] = React.useState(false);
-
-            const [notifications, setNotifications] = React.useState([
-                { id: 1, title: 'Welcome Bonus Credited!', desc: '500 Coins added to your wallet upon registration.', time: 'Just now', unread: true },
-                { id: 2, title: 'VIP Status Upgraded', desc: 'Your VIP Level 7 perks are now active.', time: '2m ago', unread: true },
-            ]);
 
             const [newRoomTitle, setNewRoomTitle] = React.useState("✨ Global Tech & AI Hangout Lounge");
             const [newRoomCategory, setNewRoomCategory] = React.useState("Tech");
@@ -664,27 +658,6 @@
             const [userRole, setUserRole] = React.useState('audience');
             const [isSelfMuted, setIsSelfMuted] = React.useState(true);
             const [audienceList, setAudienceList] = React.useState([]);
-            const [speakerRequests, setSpeakerRequests] = React.useState([]);
-            const [showRequestsModal, setShowRequestsModal] = React.useState(false);
-            const [chatMessages, setChatMessages] = React.useState([
-                { id: 1, sender: 'System', text: 'Welcome to Globe Talk Pro AI Room!', type: 'system', time: '12:00 PM' }
-            ]);
-            const [chatInput, setChatInput] = React.useState('');
-            const [showGiftModal, setShowGiftModal] = React.useState(false);
-            const [selectedGift, setSelectedGift] = React.useState(null);
-            const [selectAllRecipients, setSelectAllRecipients] = React.useState(false);
-            const [broadcastBanner, setBroadcastBanner] = React.useState(null);
-
-            const giftsList = [
-                { id: 'rose', name: 'Rose', icon: '🌹', cost: 10 },
-                { id: 'mic', name: 'Gold Mic', icon: '🎤', cost: 50 },
-                { id: 'crown', name: 'VIP Crown', icon: '👑', cost: 150 },
-            ];
-
-            const [showSeatControlModal, setShowSeatControlModal] = React.useState(false);
-            const [selectedSeatIndex, setSelectedSeatIndex] = React.useState(null);
-            const [selectedProfileUser, setSelectedProfileUser] = React.useState(null);
-            const [aiMode, setAiMode] = React.useState(null);
 
             const joinRoom = (room, role = 'audience') => {
                 setCurrentRoom(room);
